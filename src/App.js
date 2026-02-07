@@ -10,7 +10,7 @@ function App() {
       User Dashboard
     </h1>
       <div className=' m-20'>
-        {/* <UserForm/> */}
+        <UserForm/>
         <UserList/>
       </div>
     </div>

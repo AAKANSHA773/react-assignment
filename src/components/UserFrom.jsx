@@ -1,71 +1,96 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { checkValidData } from "../utils/validation";
 
-const UserForm = ({ addUser }) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+const UserForm = ({ fetchUsers }) => {
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    email: "",
+  });
 
-  const handleSubmit = (e) => {
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!firstName || !lastName || !phone || !email) {
-      alert("All fields are required");
+    if (!form.firstName || !form.lastName || !form.phone || !form.email) {
+      setErrorMsg("All fields are required");
       return;
     }
 
-    const newUser = {
-      id: Date.now(),
-      firstName,
-      lastName,
-      phone,
-      email,
-    };
+    
+    const message = checkValidData(form.email, form.phone);
+    if (message) {
+      setErrorMsg(message);
+      return;
+    }
 
-    addUser(newUser);
+    try {
+      await axios.post("http://localhost:3001/users", form);
+      fetchUsers();
 
-    setFirstName("");
-    setLastName("");
-    setPhone("");
-    setEmail("");
+      setForm({
+        firstName: "",
+        lastName: "",
+        phone: "",
+        email: "",
+      });
+
+      setErrorMsg("");
+      alert("User added successfully ✅");
+    } catch (error) {
+      console.log(error);
+      setErrorMsg("Error adding user");
+    }
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md " >
+    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4">Add User</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           className="w-full border p-2 rounded"
-          type="text"
+          name="firstName"
           placeholder="First Name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
+          value={form.firstName}
+          onChange={handleChange}
         />
 
         <input
           className="w-full border p-2 rounded"
-          type="text"
+          name="lastName"
           placeholder="Last Name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
+          value={form.lastName}
+          onChange={handleChange}
         />
 
         <input
           className="w-full border p-2 rounded"
-          type="text"
+          name="phone"
           placeholder="Phone"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          value={form.phone}
+          onChange={handleChange}
         />
 
         <input
           className="w-full border p-2 rounded"
-          type="email"
+          name="email"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={form.email}
+          onChange={handleChange}
         />
+
+    
+        {errorMsg && (
+          <p className="text-red-500 text-sm">{errorMsg}</p>
+        )}
 
         <button className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
           Add User
