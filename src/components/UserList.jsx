@@ -1,26 +1,25 @@
 import React from "react";
-import { deleteUserApi } from "../services/userApi";
+import { deleteUserApi } from "../services/userApi"; // make sure folder name = services
 
 const UserList = ({ users = [], fetchUsers, setEditUser, openForm }) => {
-
- 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Delete this user?");
+    const confirmDelete = window.confirm("Are you sure you want to delete?");
     if (!confirmDelete) return;
 
     try {
       await deleteUserApi(id);
-      fetchUsers();
+      if (fetchUsers) {
+        await fetchUsers();
+      }
+      console.log("User deleted successfully");
     } catch (error) {
-      console.log(error);
+      console.log("DELETE ERROR:", error);
       alert("Delete failed");
     }
   };
-
-  
   const handleEdit = (user) => {
-    setEditUser(user);  
-    openForm();         
+    if (setEditUser) setEditUser(user);
+    if (openForm) openForm();
   };
 
   return (
@@ -46,13 +45,18 @@ const UserList = ({ users = [], fetchUsers, setEditUser, openForm }) => {
               </thead>
               <tbody>
                 {users.map((user) => (
-                  <tr key={user.id} className="border-b hover:bg-gray-50">
-                    <td className="p-3 font-medium">
+                  <tr key={user.id} className="border-b hover:bg-gray-50 transition">
+                    <td className="p-3 font-medium text-gray-800">
                       {user.firstName} {user.lastName}
                     </td>
 
-                    <td className="p-3">{user.phone}</td>
-                    <td className="p-3">{user.email}</td>
+                    <td className="p-3 text-gray-600">
+                      {user.phone}
+                    </td>
+
+                    <td className="p-3 text-gray-600">
+                      {user.email}
+                    </td>
 
                     <td className="p-3 flex justify-center gap-3">
 
@@ -62,8 +66,6 @@ const UserList = ({ users = [], fetchUsers, setEditUser, openForm }) => {
                       >
                         Edit
                       </button>
-
-                
                       <button
                         onClick={() => handleDelete(user.id)}
                         className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-lg text-sm"

@@ -1,3 +1,11 @@
 {
-  "users": []
+  "users": [
+    {
+      "id": "bc8c",
+      "firstName": "Aakansha",
+      "lastName": "panwar",
+      "phone": "9876543211",
+      "email": "akkupanwar135@gmail.com"
+    }
+  ]
 }
