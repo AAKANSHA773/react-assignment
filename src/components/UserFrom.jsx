@@ -104,7 +104,7 @@ const UserForm = ({ fetchUsers, closeForm }) => {
 
         <button
           disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg font-semibold shadow"
+          className="w-full bg-green-700 hover:bg-green-700 text-white p-2 rounded-lg font-semibold shadow"
         >
           {loading ? "Saving..." : "Add User"}
         </button>

@@ -1,9 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserForm from "./UserFrom";
 import UserList from "./UserList";
+import { getUsers } from "../service/userApi"; 
 
 function App() {
   const [showForm, setShowForm] = useState(false);
+  const [users, setUsers] = useState([]);
+
+  const fetchUsers = async () => {
+    try {
+      const res = await getUsers();
+      setUsers(res.data);
+    } catch (error) {
+      console.log("Fetch error", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 to-blue-100">
@@ -15,7 +30,7 @@ function App() {
 
           <button
             onClick={() => setShowForm(true)}
-            className="bg-violet-600 hover:bg-violet-600 text-white px-5 py-2 rounded-lg shadow"
+            className="bg-green-700 hover:bg-green-800 text-white px-5 py-2 rounded-lg shadow"
           >
             + Add User
           </button>
@@ -27,11 +42,14 @@ function App() {
      
         {showForm && (
           <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-            <UserForm closeForm={() => setShowForm(false)} />
+            <UserForm
+              fetchUsers={fetchUsers}
+              closeForm={() => setShowForm(false)}
+            />
           </div>
         )}
 
-        <UserList/>
+        <UserList users={users} />
       </div>
     </div>
   );
