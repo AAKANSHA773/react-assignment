@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { addUserApi, updateUserApi } from "../services/userApi";
 import { checkValidData } from "../utils/validation";
 
-const UserForm = ({ fetchUsers, closeForm }) => {
+const UserForm = ({ fetchUsers, closeForm, editUser, setEditUser }) => { 
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -12,6 +12,17 @@ const UserForm = ({ fetchUsers, closeForm }) => {
 
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (editUser) {
+      setForm({
+        firstName: editUser.firstName || "",
+        lastName: editUser.lastName || "",
+        phone: editUser.phone || "",
+        email: editUser.email || "",
+      });
+    }
+  }, [editUser]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -32,7 +43,14 @@ const UserForm = ({ fetchUsers, closeForm }) => {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:3001/users", form);
+      if (editUser) {
+        await updateUserApi(editUser.id, form);
+        alert("User updated successfully");
+      } 
+      else {
+        await addUserApi(form);
+        alert("User added successfully ✅");
+      }
       if (fetchUsers) await fetchUsers();
 
       setForm({
@@ -42,33 +60,36 @@ const UserForm = ({ fetchUsers, closeForm }) => {
         email: "",
       });
 
+      setEditUser(null);
       setErrorMsg("");
       setLoading(false);
-      alert("User added successfully ✅");
       if (closeForm) closeForm();
     } catch (error) {
       console.log("ERROR:", error);
       setLoading(false);
-      setErrorMsg("Error adding user");
+      setErrorMsg("Something went wrong");
     }
   };
 
   return (
     <div className="bg-white w-[400px] rounded-xl shadow-2xl p-6 relative">
       <button
-        onClick={closeForm}
+        onClick={() => {
+          if (closeForm) closeForm();
+          if (setEditUser) setEditUser(null);
+        }}
         className="absolute top-3 right-4 text-gray-400 hover:text-red-500 text-xl font-bold"
       >
         ✕
       </button>
 
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-        Add User
+        {editUser ? "Edit User" : "Add User"}
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
-          className="w-full border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 p-2 rounded-lg outline-none"
+          className="w-full border p-2 rounded-lg"
           name="firstName"
           placeholder="First Name"
           value={form.firstName}
@@ -76,7 +97,7 @@ const UserForm = ({ fetchUsers, closeForm }) => {
         />
 
         <input
-          className="w-full border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 p-2 rounded-lg outline-none"
+          className="w-full border p-2 rounded-lg"
           name="lastName"
           placeholder="Last Name"
           value={form.lastName}
@@ -84,7 +105,7 @@ const UserForm = ({ fetchUsers, closeForm }) => {
         />
 
         <input
-          className="w-full border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 p-2 rounded-lg outline-none"
+          className="w-full border p-2 rounded-lg"
           name="phone"
           placeholder="Phone"
           value={form.phone}
@@ -92,7 +113,7 @@ const UserForm = ({ fetchUsers, closeForm }) => {
         />
 
         <input
-          className="w-full border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 p-2 rounded-lg outline-none"
+          className="w-full border p-2 rounded-lg"
           name="email"
           placeholder="Email"
           value={form.email}
@@ -104,9 +125,13 @@ const UserForm = ({ fetchUsers, closeForm }) => {
 
         <button
           disabled={loading}
-          className="w-full bg-green-700 hover:bg-green-700 text-white p-2 rounded-lg font-semibold shadow"
+          className="w-full bg-green-700 text-white p-2 rounded-lg font-semibold"
         >
-          {loading ? "Saving..." : "Add User"}
+          {loading
+            ? "Saving..."
+            : editUser
+            ? "Update User"
+            : "Add User"}
         </button>
       </form>
     </div>
