@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3001/users";
+const BASE_URL = "https://react-assignment-json.onrender.com/users";
+
 
 export const getUsers = () => axios.get(BASE_URL);
 
