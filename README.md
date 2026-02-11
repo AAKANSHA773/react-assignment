@@ -1,70 +1,159 @@
-# Getting Started with Create React App
+# React User Management CRUD App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A simple React-based CRUD (Create, Read, Update, Delete) web application to manage user data using an API. The application is designed with extensibility in mind so new fields can be added with minimal code changes.
 
-## Available Scripts
+## Live Demo
 
-In the project directory, you can run:
+Frontend deployed on Vercel:
+(https://react-assignment-nu-sandy.vercel.app/)
 
-### `npm start`
+Backend API deployed on Render:
+(https://react-assignment-json.onrender.com/)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Features
 
-### `npm test`
+### User Form
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* Fields:
 
-### `npm run build`
+  * First Name
+  * Last Name
+  * Phone Number
+  * Email Address
+* Required field validation
+* Email & phone format validation
+* Loading and error states
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### CRUD Operations
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* Create a new user
+* Read and display all users
+* Update existing user information
+* Delete a user
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Extensible Form Architecture
 
-### `npm run eject`
+The form is configuration-driven.
+New fields can be added by updating a single configuration file without rewriting UI or logic.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Example:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+src/config/formConfig.js
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Add a new field:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+{
+  name: "address",
+  label: "Address",
+  type: "text",
+  required: false
+}
+```
 
-## Learn More
+The form updates automatically.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### UI/UX
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* Clean dashboard layout
+* Popup form for add/edit
+* Responsive table
+* Tailwind CSS styling
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Tech Stack
 
-### Analyzing the Bundle Size
+* React
+* Tailwind CSS
+* Axios
+* JSON Server
+* Vercel (Frontend deployment)
+* Render (Backend API deployment)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```
+src/
+ ┣ components/
+ ┃ ┣ UserForm.jsx
+ ┃ ┗ UserList.jsx
+ ┣ services/
+ ┃ ┗ userApi.js
+ ┣ utils/
+ ┃ ┗ validation.js
+ ┣ config/
+ ┃ ┗ formConfig.js
+ ┣ controllers/
+ ┃ ┗ formController.js
+ ┗ App.js
+```
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Setup Instructions
 
-### Deployment
+### Clone repository
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```
+git clone <your-repo-url>
+cd project-folder
+```
 
-### `npm run build` fails to minify
+### Install dependencies
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+npm install
+```
+
+### Run frontend locally
+
+```
+npm start
+```
+
+### Run JSON server locally
+
+```
+npx json-server --watch db.json --port 3001
+```
+
+---
+
+## API Integration
+
+The application uses REST APIs for CRUD operations.
+
+Endpoints:
+
+* GET /users
+* POST /users
+* PUT /users/:id
+* DELETE /users/:id
+
+---
+
+## Assumptions & Design Decisions
+
+* JSON-server used as mock backend
+* Config-driven form implemented for extensibility
+* Axios used for API communication
+* Modular architecture (services, utils, controllers)
+
+---
+
+## Deployment
+
+Frontend deployed on Vercel.
+Backend JSON API deployed on Render.
+
+---
+
+
+
